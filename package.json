@@ -1,0 +1,25 @@
+{
+    "name": "lights"
+  , "version": "0.0.1"
+  , "scripts": {
+     "start": "node_modules/.bin/coffee server.coffee"
+    }
+  , "devDependencies": {
+      "supervisor": ""
+      , "jasmine-node": ""
+  }
+  , "dependencies": {
+      "coffee-script": ""
+      , "express": ""
+      , "jade": ""
+      , "piler": ""
+      , "socket.io": ""
+      , "stylus": ""
+      , "backbone": ""
+      , "underscore": ""
+      , "underscore.string": ""
+      , "socket.io": ""
+      , "async": ""
+  }
+}
+
