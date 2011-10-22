@@ -1,0 +1,14 @@
+!!! 5
+html
+  head
+    title lights
+    !{renderStyleTags()}
+    !{renderScriptTags()}
+
+  body
+    h1 hello
+    .light-grid
+      each l in lights
+        .light
+          span.id= l.id
+
