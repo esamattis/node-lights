@@ -16,6 +16,7 @@ config =
 app = express.createServer()
 
 sockets = io = require("socket.io").listen app
+io.set "log level", 0
 
 app.configure ->
   app.use(express.static(__dirname + '/public'))
@@ -39,9 +40,6 @@ app.get "/", (req, res) ->
 
 
 udbserver = dgram.createSocket("udp4")
-
-io.sockets.on "connection", (socket) ->
-  console.log "connection, got web client!!!!"
 
 udbserver.on "message", (packet, rinfo) ->
   msg = jspack.Unpack ">LLBBB", packet, 0
