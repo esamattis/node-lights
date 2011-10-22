@@ -31,8 +31,6 @@ app.configure "development", ->
   js.liveUpdate css, io
 
 
-
-
 app.get "/", (req, res) ->
 
   res.render "index.jade",
@@ -48,14 +46,15 @@ io.sockets.on "connection", (socket) ->
 udbserver.on "message", (packet, rinfo) ->
   msg = jspack.Unpack ">LLBBB", packet, 0
   # got [ 0, 5, 0, 255, 0 ] { size: 11, address: '127.0.0.1', port: 34212 }
-  console.log "got", msg, rinfo
   msg.push rinfo.address
-  io.sockets.volatile.emit "light", msg,
+  io.sockets.volatile.emit "light", msg
 
 udbserver.on "listening", ->
-  console.log "Listening", udbserver.address()
+  console.log "UDP server is now waiting packets on port #{ config.udpPort }"
+
+app.on "listening", ->
+  console.log "View simulator on http://(TODO:configureme):#{ config.webPort }/"
 
 
 udbserver.bind config.udpPort
 app.listen config.webPort
-
