@@ -9,8 +9,9 @@ js = piler.createJSManager()
 css = piler.createCSSManager()
 
 app = express.createServer()
-io = require("socket.io").listen app
-sockets = io.of "/lights"
+
+sockets = io = require("socket.io").listen app
+
 app.configure ->
   app.use(express.static(__dirname + '/public'))
   js.bind app
@@ -21,10 +22,10 @@ app.configure ->
   js.addFile __dirname + "/client.coffee"
 
 app.configure "development", ->
-  js.liveUpdate css
+  js.liveUpdate css, io
 
 
-lights = ({id: i} for i in [1...12])
+lights = ({id: i} for i in [0...12])
 
 app.get "/", (req, res) ->
 
@@ -34,19 +35,16 @@ app.get "/", (req, res) ->
 
 
 udbserver = dgram.createSocket("udp4")
-setInterval ->
-  console.log "sending"
-  sockets.emit "lights", 123
-, 500
 
-sockets.on "connection", (socket) ->
-  console.log "got web client!!!!"
+io.sockets.on "connection", (socket) ->
+  console.log "connection, got web client!!!!"
 
 udbserver.on "message", (packet, rinfo) ->
   msg = jspack.Unpack ">LLBBB", packet, 0
   # got [ 0, 5, 0, 255, 0 ] { size: 11, address: '127.0.0.1', port: 34212 }
   console.log "got", msg, rinfo
-  sockets.broadcast.emit "lights", msg
+  msg.push rinfo.address
+  io.sockets.volatile.emit "light", msg,
 
 udbserver.on "listening", ->
   console.log "Listening", udbserver.address()

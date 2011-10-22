@@ -9,6 +9,6 @@ html
     h1 hello
     .light-grid
       each l in lights
-        .light
-          span.id= l.id
+        .light(data-light-id="#{ l.id }")
+          span= l.id
 
