@@ -1,7 +1,7 @@
 
 # Instanssi Light Server Simulator - ILSS
 
-Should be running in Alternative Party network at http://valot.instassi.org:1337/
+Should be running in Alternative Party network at http://valot.instanssi.org:1337/
 
 
 ## Installing
