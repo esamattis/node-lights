@@ -1,6 +1,41 @@
 
+$ ->
+  $("span.server").text " #{ location.hostname }:#{ config.udpPort } "
+
+class Log
+
+  constructor: (@opts) ->
+    @el = @opts.el
+    @messages = []
+    @dirty = false
+
+    setInterval =>
+      @render() if @dirty
+    , 20
+
+
+  log: (msg) ->
+    @messages.unshift msg
+
+    if @messages.length > 5
+      @messages.pop()
+
+    @dirty = true
+
+  render: ->
+    html = ""
+    for msg in @messages
+      html += "<p>#{ msg }</p>" 
+    @el.innerHTML = html
+    console.log html
+    @dirty = false
+
+
+
 
 jQuery ($) ->
+  window.err = new Log el: $(".log .err").get 0
+  window.info = new Log el: $(".log .info").get 0
 
   lights = {}
   $(".light").each ->
@@ -15,12 +50,15 @@ jQuery ($) ->
     console.log "connected!"
 
   socket.on "light", (data) ->
-    [__, id, r, g, b] = data
-    id = parseInt id
+    [__, id, r, g, b, ip] = data
+    light = lights[id = parseInt id]
 
-    console.log JSON.stringify data
-    # got [ 0, 5, 0, 255, 0 ] { size: 11, address: '127.0.0.1', port: 34212 }
-    lights[id].css "background-color", rgb = "rgb(#{ r }, #{ g },#{ b })"
-    lights[id].css "box-shadow", "0px 0px 100px #{ rgb }"
+    if not light
+      err.log "#{ ip } Tried setting non-existent id #{ id }"
+      return
+
+    light.css "background-color", rgb = "rgb(#{ r }, #{ g },#{ b })"
+    light.css "box-shadow", "0px 0px 100px #{ rgb }"
+    info.log "#{ ip } set #{ id } to #{ rgb }"
 
 

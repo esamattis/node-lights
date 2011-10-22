@@ -8,6 +8,11 @@ piler = require "piler"
 js = piler.createJSManager()
 css = piler.createCSSManager()
 
+config =
+  lights: ({id: i} for i in [0...12])
+  udpPort: 1234
+  webPort: 1337
+
 app = express.createServer()
 
 sockets = io = require("socket.io").listen app
@@ -20,18 +25,19 @@ app.configure ->
   js.addUrl "/socket.io/socket.io.js"
   js.addFile __dirname + "/jquery.js"
   js.addFile __dirname + "/client.coffee"
+  js.addOb config: config
 
 app.configure "development", ->
   js.liveUpdate css, io
 
 
-lights = ({id: i} for i in [0...12])
+
 
 app.get "/", (req, res) ->
 
   res.render "index.jade",
     layout: false
-    lights: lights
+    config: config
 
 
 udbserver = dgram.createSocket("udp4")
@@ -49,7 +55,7 @@ udbserver.on "message", (packet, rinfo) ->
 udbserver.on "listening", ->
   console.log "Listening", udbserver.address()
 
-udbserver.bind 1234
 
-app.listen 1337
+udbserver.bind config.udpPort
+app.listen config.webPort
 

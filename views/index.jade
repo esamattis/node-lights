@@ -6,9 +6,18 @@ html
     !{renderScriptTags()}
 
   body
-    h1 hello
+    h2
+      span UDP light server simulator is listening on 
+      span.server
+      span  read more from 
+      a(href="http://valot.instanssi.org/") valot.instanssi.org
+
     .light-grid
-      each l in lights
+      each l in config.lights
         .light(data-light-id="#{ l.id }")
           span= l.id
 
+    .clear
+    .log 
+      .info
+      .err
