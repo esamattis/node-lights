@@ -9,7 +9,7 @@ js = piler.createJSManager()
 css = piler.createCSSManager()
 
 config =
-  lights: ({id: i} for i in [0...12])
+  lights: ({id: i} for i in [0...13])
   udpPort: 1234
   webPort: 1337
 

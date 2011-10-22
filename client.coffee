@@ -17,7 +17,7 @@ class Log
   log: (msg) ->
     @messages.unshift msg
 
-    if @messages.length > 5
+    if @messages.length > 100
       @messages.pop()
 
     @dirty = true
