@@ -43,14 +43,13 @@ udbserver = dgram.createSocket("udp4")
 
 udbserver.on "message", (packet, rinfo) ->
   pos = 0
-  loop
+  while pos < packet.length
+
     msg = jspack.Unpack ">LLBBB", packet.slice(pos, pos+11), 0
     pos += 11
-    if pos >= packet.length
-      break
-    # console.log msg
 
     if msg
+      console.log "sending", msg
       msg.push rinfo.address
       # io.sockets.emit "light", msg
       io.sockets.volatile.emit "light", msg
