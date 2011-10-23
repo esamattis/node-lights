@@ -42,10 +42,23 @@ app.get "/", (req, res) ->
 udbserver = dgram.createSocket("udp4")
 
 udbserver.on "message", (packet, rinfo) ->
-  msg = jspack.Unpack ">LLBBB", packet, 0
-  # got [ 0, 5, 0, 255, 0 ] { size: 11, address: '127.0.0.1', port: 34212 }
-  msg.push rinfo.address
-  io.sockets.volatile.emit "light", msg
+  pos = 0
+  loop
+    msg = jspack.Unpack ">LLBBB", packet.slice(pos, pos+11), 0
+    pos += 11
+    if pos >= packet.length
+      break
+    # console.log msg
+
+    if msg
+      msg.push rinfo.address
+      # io.sockets.emit "light", msg
+      io.sockets.volatile.emit "light", msg
+    else
+      console.log "bad packet #{ packet } from rinfo.address"
+      io.sockets.volatile.emit "packeterror",
+        packet: packets.toString()
+        ip: rinfo.address
 
 udbserver.on "listening", ->
   console.log "UDP server is now waiting packets on port #{ config.udpPort }"

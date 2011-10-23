@@ -49,6 +49,9 @@ jQuery ($) ->
   socket.on "connect", ->
     console.log "connected!"
 
+  socket.on "packeterror", (data) ->
+      err.log "#{ data.ip } sent #{ data.packet }"
+
   socket.on "light", (data) ->
     [__, id, r, g, b, ip] = data
     light = lights[id = parseInt id]
