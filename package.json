@@ -13,6 +13,7 @@
       , "express": ""
       , "jade": ""
       , "piler": ""
+      , "jspack": ""
       , "socket.io": ""
       , "stylus": ""
       , "backbone": ""
